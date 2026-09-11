@@ -1,0 +1,58 @@
+.card
+  width: 302px
+
+  box-sizing: border-box
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease
+
+  &:hover
+    transform: translateY(-4px)
+    border-color: #2f6b3f
+    box-shadow: 0 12px 24px rgba(47, 107, 63, 0.18)
+
+.image
+  display: block
+  width: 276px
+  height: 276px
+  margin: 0 auto
+  object-fit: contain
+  background: #f5f7f5
+
+.title
+  min-height: 28px
+  margin: 0
+  font-family: Inter, sans-serif
+  font-size: 18px
+  font-weight: 600
+  line-height: 155%
+  letter-spacing: 0
+
+.price
+  margin: 0
+  font-family: Inter, sans-serif
+  font-size: 19px
+  font-weight: 600
+  line-height: 24px
+  letter-spacing: 0
+
+.addButton
+  width: 204px
+  height: 44px
+  flex-shrink: 0
+  background-color: #e7faeb
+  color: #3b944e
+  --button-bg: #e7faeb
+  --button-hover: #d8f3de
+  --button-color: #3b944e
+
+  &:hover
+    background-color: #d8f3de
+    color: #3b944e
+
+.imageSection
+  margin-bottom: 16px
+
+.middle
+  margin: 0
+
+.footer
+  margin-top: 16px

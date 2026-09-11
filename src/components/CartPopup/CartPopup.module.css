@@ -1,0 +1,118 @@
+.emptyState {
+  width: 300px;
+  height: 225px;
+  box-sizing: border-box;
+  padding-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emptyImage {
+  display: block;
+  width: 180px;
+  height: 140px;
+  object-fit: contain;
+}
+
+.emptyText {
+  margin: 24px 0 0;
+  color: #868e96;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+}
+
+.filledState {
+  width: 100%;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  column-gap: 16px;
+  align-items: center;
+  padding: 0 0 16px;
+}
+.item:not(:first-child) {
+  padding-top: 16px;
+}
+.item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 80px;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #dee2e6;
+}
+
+.itemImage {
+  display: block;
+  width: 64px;
+  height: 64px;
+}
+
+.itemInfo {
+  min-width: 0;
+}
+
+.itemTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.itemName {
+  font-family: Inter, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.itemWeight {
+  color: #868e96;
+  font-family: Inter, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.itemPrice {
+  margin-top: 8px;
+  font-family: Inter, sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.itemQuantity {
+  justify-self: end;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #dee2e6;
+}
+
+.totalLabel,
+.totalPrice {
+  font-family: Inter, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+/*# sourceMappingURL=CartPopup.module.css.map */
