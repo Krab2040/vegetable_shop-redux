@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { ProductCard } from './ProductCard'
 import type { Product } from '../../modules/shop/model/product'
+import { Provider } from 'react-redux'
+import { createAppStore } from '../../app/store'
 
 const product: Product = {
     id: 1,

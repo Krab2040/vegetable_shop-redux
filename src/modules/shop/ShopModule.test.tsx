@@ -5,7 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ShopModule } from './ShopModule'
 import { fetchProducts } from './api/productsApi'
 import type { Product } from './model/product'
-
+import { Provider } from 'react-redux'
+import { createAppStore } from '../../app/store'
 
 vi.mock('./api/productsApi', () => ({
     fetchProducts: vi.fn(),
@@ -19,6 +20,16 @@ const product: Product = {
     category: 'vegetables',
 }
 
+function renderShop() {
+    return render(
+        <Provider store={createAppStore()}>
+            <MantineProvider>
+                <ShopModule />
+            </MantineProvider>
+        </Provider>,
+    )
+}
+
 describe('ShopModule', () => {
     beforeEach(() => {
         vi.mocked(fetchProducts).mockResolvedValue([product])
@@ -27,11 +38,7 @@ describe('ShopModule', () => {
     it('объединяет количество одинакового товара в корзине', async () => {
         const user = userEvent.setup()
 
-        render(
-            <MantineProvider>
-                <ShopModule />
-            </MantineProvider>,
-        )
+        renderShop()
 
         const addButton = await screen.findByRole('button', {
             name: 'Add to cart',
@@ -59,11 +66,7 @@ describe('ShopModule', () => {
             new Promise(() => {}),
         )
 
-        render(
-            <MantineProvider>
-                <ShopModule />
-            </MantineProvider>,
-        )
+        renderShop()
 
         expect(
             document.querySelector('.mantine-Loader-root'),
@@ -74,11 +77,7 @@ describe('ShopModule', () => {
             new Error('Network error'),
         )
 
-        render(
-            <MantineProvider>
-                <ShopModule />
-            </MantineProvider>,
-        )
+        renderShop()
 
         expect(
             await screen.findByText('Не удалось загрузить товары'),

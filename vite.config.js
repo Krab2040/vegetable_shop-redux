@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-    base: '/vegetable-shop/',
+    base: '/vegetable_shop-redux/',
     plugins: [react()],
     test: {
         globals: true,

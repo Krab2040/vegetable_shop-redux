@@ -5,6 +5,8 @@ import '@mantine/core/styles.css'
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/600.css'
 import App from './app/App'
+import { Provider } from 'react-redux'
+import { store } from './app/store'
 
 const rootElement = document.getElementById('root')
 
@@ -14,8 +16,10 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
     <StrictMode>
-        <MantineProvider>
-            <App/>
-        </MantineProvider>
+        <Provider store={store}>
+            <MantineProvider>
+                <App />
+            </MantineProvider>
+        </Provider>
     </StrictMode>,
 )

@@ -1,114 +1,74 @@
-import {useEffect, useState} from "react";
 import {Loader} from "../../ui/Loader/Loader";
-import {fetchProducts} from "./api/productsApi";
 import type {Product} from "./model/product";
 import {ProductCard} from '../../components/ProductCard/ProductCard'
-import type {CartItem} from './model/cartItem'
 import { Header } from '../../components/Header/Header'
 import { CartPopup } from '../../components/CartPopup/CartPopup'
 import { ProductGrid } from '../../components/ProductGrid/ProductGrid'
 import { Title } from '@mantine/core'
 import styles from './ShopModule.module.sass'
+import { useEffect } from 'react'
+import {useAppDispatch, useAppSelector,} from '../../app/hooks'
+import {fetchProducts,} from './model/productsSlice'
+import {addToCart, selectCartItems, selectTotalItems, selectTotalPrice, setItemQuantity,} from './model/cartSlice'
+import {selectIsCartOpened, setCartOpened,} from './model/uiSlice'
+
 
 
 export function ShopModule() {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [cartItems, setCartItems] = useState<CartItem[]>([])
-    const [isCartOpened, setIsCartOpened] = useState(false)
+    const dispatch = useAppDispatch()
 
-    const handleAddToCart = (product: Product, quantity: number) => {
-        setCartItems((currentItems) => {
-            const existingItem = currentItems.find(
-                (item) => item.product.id === product.id,
-            )
+    const products = useAppSelector(
+        (state) => state.products.items,
+    )
 
-            if (existingItem) {
-                return currentItems.map((item) => {
-                    if (item.product.id !== product.id) {
-                        return item
-                    }
+    const productsStatus = useAppSelector(
+        (state) => state.products.status,
+    )
 
-                    return {
-                        ...item,
-                        quantity: item.quantity + quantity,
-                    }
-                })
-            }
+    const productsError = useAppSelector(
+        (state) => state.products.error,
+    )
 
-            return [
-                ...currentItems,
-                {
-                    product,
-                    quantity,
-                },
-            ]
-        })
+    const cartItems = useAppSelector(selectCartItems)
+    const totalItems = useAppSelector(selectTotalItems)
+    const totalPrice = useAppSelector(selectTotalPrice)
+    const isCartOpened = useAppSelector(selectIsCartOpened)
+
+    const handleAddToCart = (
+        product: Product,
+        quantity: number,
+    ) => {
+        dispatch(addToCart({ product, quantity }))
     }
 
     const handleCartItemQuantityChange = (
         productId: number,
         quantity: number,
     ) => {
-        setCartItems((currentItems) => {
-            if (quantity <= 0) {
-                return currentItems.filter(
-                    (item) => item.product.id !== productId,
-                )
-            }
-
-            return currentItems.map((item) => {
-                if (item.product.id !== productId) {
-                    return item
-                }
-
-                return {
-                    ...item,
-                    quantity,
-                }
-            })
-        })
+        dispatch(
+            setItemQuantity({
+                productId,
+                quantity,
+            }),
+        )
     }
 
     useEffect(() => {
-        const controller = new AbortController();
+        if (productsStatus === 'idle') {
+            dispatch(fetchProducts())
+        }
+    }, [dispatch, productsStatus])
 
-        fetchProducts(controller.signal)
-            .then(setProducts)
-            .catch((requestError: unknown) => {
-                if (
-                    requestError instanceof DOMException &&
-                    requestError.name === "AbortError"
-                ) {
-                    return
-                }
-
-                setError("Не удалось загрузить товары");
-            })
-            .finally(() => setIsLoading(false));
-
-        return () => controller.abort();
-
-    }, [])
-
-    if (isLoading) {
-        return <Loader size="lg"/>
+    if (
+        productsStatus === 'idle' ||
+        productsStatus === 'loading'
+    ) {
+        return <Loader size="lg" />
     }
 
-    if (error) {
-        return <p>{error}</p>
+    if (productsError) {
+        return <p>{productsError}</p>
     }
-
-    const totalItems = cartItems.reduce(
-        (total, item) => total + item.quantity,
-        0,
-    )
-
-    const totalPrice = cartItems.reduce(
-        (total, item) => total + item.product.price * item.quantity,
-        0,
-    )
 
     return (
         <div className={styles.page}>
@@ -116,7 +76,9 @@ export function ShopModule() {
                 totalItems={totalItems}
                 totalPrice={totalPrice}
                 cartOpened={isCartOpened}
-                onCartOpenedChange={setIsCartOpened}
+                onCartOpenedChange={(opened) =>
+                    dispatch(setCartOpened(opened))
+                }
                 cartPopup={
                     <CartPopup
                         items={cartItems}
